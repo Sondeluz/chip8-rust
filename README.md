@@ -47,6 +47,11 @@ OPTIONS:
 
 You can find public-domain games [here](https://www.zophar.net/pdroms/chip8/chip-8-games-pack.html). 
 
+While playing, you can:
+- Pause the emulation by pressing the spacebar.
+- Increase the game's frequency by pressing the Up arrow. 
+- Decrease the game's frequency by pressing the Up arrow.
+- Exit the application by pressing Escape (or closing the window)
 
 ## Credits
 
