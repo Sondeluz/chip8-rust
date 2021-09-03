@@ -1,42 +1,52 @@
-![Screenshot](/screenshot.png?raw=true "The emulator running 'blinky'")
+![Screenshot](/demo.gif?raw=true "BLITZ with the "debugger" running on the right")
 
 ## Introduction
 
-This is a chip-8 VM built in rust. If you're reading this, chances are that you're thinking of writing your own chip8 emulator. You should! It gives you a great feel for how home computers worked back in the late 70s. It's also a nice project for people new to Rust, because you don't need any of the language's more advanced features (like generics and traits). 
+This is a fork of [starrhorne's](https://github.com/starrhorne/chip8-rust) amazing CHIP-8 emulator, written in Rust.
+I wanted to play with Rust's low-level stuff and work on a small emulator, and this was a great choice. 
+This is pretty much based on starrhorne's project, hence the fork. 
+Some parts of it are the same source files, self-commented, with a few tweaks here and there which don't really change the overall behavior.
+
+I added a few functions such as being able to see the CPU registers, stack contents and a small instruction history,
+which requires providing a valid .ttf file for displaying text. I included one (Terminus TTF) in the project.
+
+I also moved around some structural parts, such as the timers which now reside in a separate thread running at 60Hz.
+
+Finally, it is also possible to:
+    - Pause the emulation by pressing the spacebar.
+    - Increase the game's frequency by pressing the Up arrow. (Doesn't affect the timers)
+    - Decrease the game's frequency by pressing the Up arrow. (Doesn't affect the timers)
+    - Toggle sprite wrapping on/off, as some games require wrapping, and others not (via arguments).
 
 ## Resources
 
-These were the most useful chip-8 references I found. 
-
-* [Mastering Chip-8](http://mattmik.com/files/chip8/mastering/chip8.html)
-* [Cowgod's Chip-8 Reference](http://devernay.free.fr/hacks/chip8/C8TECH10.HTM)
-* [How to write an emulator](http://www.multigesture.net/articles/how-to-write-an-emulator-chip-8-interpreter/) 
+Please refer to [starrhorne's](https://github.com/starrhorne/chip8-rust) resources tips.
 
 ## Requirements
 
-You need to have sdl2 installed with headers. On Ubuntu 17.04, this did the trick:
-
-```
-sudo apt-get install libsdl2-dev libsdl2-gfx-dev
-```
+Apart from needing to have sdl2 libraries installed, it is also now required to have sdl2-ttf libraries too.
 
 ## Usage
 
-Clone this repository, then run:
+Clone this repository, then run the executable, arguments can be found below:
 
 ```
-cargo run /path/to/game
+USAGE:
+    chip-8-vm [FLAGS] [OPTIONS] <rom-path>
+
+FLAGS:
+    -h, --help                Prints help information
+    -V, --version             Prints version information
+    -w, --wrapping_enabled    Enable sprite wrapping on the borders of the screen (needed by some games, such as BLITZ)
+
+OPTIONS:
+    -f, --font_path <font_path>    Path to the font needed to display information [default: font.ttf]
+
 ```
 
 You can find public-domain games [here](https://www.zophar.net/pdroms/chip8/chip-8-games-pack.html). 
 
-## Comments
-
-Feel free to let me know if you have any questions or comments about this code.
-At the time I'm writing this, I'm pretty new to Rust so it may not be 100% idiomatic. You can reach me on twitter @StarrHorne, or by opening an issue on this repo. 
-
 
 ## Credits
 
-Most of the SDL-related code was taken from the sdl2 crate's documentation and examples. I also used Mike Zaby's [rust chip8 repository](https://github.com/mikezaby/chip-8.rs) as a reference, though I didn't use any of his code.  
-
+[starrhorne's project](https://github.com/starrhorne/chip8-rust).

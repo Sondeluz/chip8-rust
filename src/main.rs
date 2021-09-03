@@ -1,52 +1,65 @@
-extern crate rand;
-extern crate sdl2;
-mod drivers;
-mod processor;
-mod font;
+use sdl2;
 
-use std::thread;
-use std::time::Duration;
-use std::env;
+//#[path = "cpu/cpu.rs"] // Another way to do it
+mod chip8;
+mod config;
 
-use drivers::{DisplayDriver, AudioDriver, InputDriver, CartridgeDriver};
-use processor::Processor;
-
-const CHIP8_WIDTH: usize = 64;
-const CHIP8_HEIGHT: usize = 32;
-const CHIP8_RAM: usize = 4096;
-
-
+use std::{thread, time};
+//use std::time::SystemTime;
+use std::sync::{Arc, Mutex};
+use std::rc::Rc;
+use std::cell::RefCell;
+use std::sync::mpsc::{self};
+use structopt::StructOpt;
 
 fn main() {
-    let sleep_duration = Duration::from_millis(2);
+    // https://jackson-s.me/2019/07/13/Chip-8-Instruction-Scheduling-and-Frequency.html
+    // we run the main loop at 550hz (~1.82ms), and the timers at 60Hz
+    
+    let freq_period : Rc<RefCell<u64>> = Rc::new(RefCell::new(1820000)); // Shared with they keypad, inside the cpu
+    let config = config::Config::from_args();
 
+    // SDL2
     let sdl_context = sdl2::init().unwrap();
+    let ttf_context = sdl2::ttf::init().unwrap();
 
-    let args: Vec<String> = env::args().collect();
-    let cartridge_filename = &args[1];
+    // Timers and pause shared variables
+    let timers : Arc<Mutex<(u8, u8)>> = Arc::new(Mutex::new((0,0)));
+    let pause : Rc<RefCell<bool>> = Rc::new(RefCell::new(false));
 
-    let cartridge_driver = CartridgeDriver::new(cartridge_filename);
-    let audio_driver = AudioDriver::new(&sdl_context);
-    let mut display_driver = DisplayDriver::new(&sdl_context);
-    let mut input_driver = InputDriver::new(&sdl_context);
-    let mut processor = Processor::new();
+    // Cpu
+    let mut cpu = chip8::Cpu::new(&sdl_context, &config, Arc::clone(&timers), Rc::clone(&pause), Rc::clone(&freq_period), ttf_context);
+    let mut wants_to_quit = false;
+    
+    // Timer loop and beep flag
+    let (tx, rx) = mpsc::channel();
 
-    processor.load(&cartridge_driver.rom);
+    let must_beep = Arc::new(Mutex::new(false));
 
-    while let Ok(keypad) = input_driver.poll() {
+    let must_beep_inner = Arc::clone(&must_beep);
+    let handler = thread::spawn(move || {
+        let mut timer_subsystem = chip8::Timer::new(Arc::clone(&timers), rx, must_beep_inner);
+        timer_subsystem.run();
+    });
 
-        let output = processor.tick(keypad);
+    // Sound subsystem
+    let sound_subsystem = chip8::Sound::new(&sdl_context);
 
-        if output.vram_changed {
-            display_driver.draw(output.vram);
-        }
-
-        if output.beep {
-            audio_driver.start_beep();
+    while ! (cpu.finished() || wants_to_quit) {
+        wants_to_quit = cpu.poll_keypad();
+        
+        cpu.cycle();    
+        
+        if * must_beep.lock().unwrap() {
+            sound_subsystem.beep();
         } else {
-            audio_driver.stop_beep();
+            sound_subsystem.stop_beep();
         }
 
-        thread::sleep(sleep_duration);
+        thread::sleep(time::Duration::from_nanos(*freq_period.borrow()));
     }
+
+    let _ = tx.send(()); // Tell the timer subsystem to stop
+    handler.join().unwrap();
+    println!("Terminating VM...");
 }

@@ -1,12 +1,15 @@
 [package]
-name = "chip8"
+name = "chip-8-vm"
 version = "0.1.0"
-authors = ["Starr Horne <starr@chromahq.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-rand = "0.3.15"
+rand = "0.8.0"
+structopt = "0.3.23"
 
 [dependencies.sdl2]
-version = "0.30"
+version = "0.34.5"
 default-features = false
-features = ["gfx"]
+features = ["ttf"]
