@@ -1,4 +1,4 @@
-![Screenshot](/demo.gif?raw=true "BLITZ with the "debugger" running on the right")
+![Playing BLITZ with the "debugger" on the right](link)
 
 ## Introduction
 
