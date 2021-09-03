@@ -1,4 +1,4 @@
-![Playing BLITZ with the "debugger" on the right](link)
+![Playing BLITZ with the "debugger" on the right](https://github.com/Sondeluz/chip8-rust/blob/master/demo.gif)
 
 ## Introduction
 
