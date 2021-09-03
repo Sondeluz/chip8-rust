@@ -13,10 +13,11 @@ which requires providing a valid .ttf file for displaying text. I included one (
 I also moved around some structural parts, such as the timers which now reside in a separate thread running at 60Hz.
 
 Finally, it is also possible to:
-    - Pause the emulation by pressing the spacebar.
-    - Increase the game's frequency by pressing the Up arrow. (Doesn't affect the timers)
-    - Decrease the game's frequency by pressing the Up arrow. (Doesn't affect the timers)
-    - Toggle sprite wrapping on/off, as some games require wrapping, and others not (via arguments).
+
+- Pause the emulation by pressing the spacebar.
+- Increase the game's frequency by pressing the Up arrow. (Doesn't affect the timers)
+- Decrease the game's frequency by pressing the Up arrow. (Doesn't affect the timers)
+- Toggle sprite wrapping on/off, as some games require wrapping, and others not (via arguments).
 
 ## Resources
 
