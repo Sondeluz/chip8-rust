@@ -16,7 +16,7 @@ Finally, it is also possible to:
 
 - Pause the emulation by pressing the spacebar.
 - Increase the game's frequency by pressing the Up arrow. (Doesn't affect the timers)
-- Decrease the game's frequency by pressing the Up arrow. (Doesn't affect the timers)
+- Decrease the game's frequency by pressing the Down arrow. (Doesn't affect the timers)
 - Toggle sprite wrapping on/off, as some games require wrapping, and others not (via arguments).
 
 ## Resources
@@ -50,7 +50,7 @@ You can find public-domain games [here](https://www.zophar.net/pdroms/chip8/chip
 While playing, you can:
 - Pause the emulation by pressing the spacebar.
 - Increase the game's frequency by pressing the Up arrow. 
-- Decrease the game's frequency by pressing the Up arrow.
+- Decrease the game's frequency by pressing the Down arrow.
 - Exit the application by pressing Escape (or closing the window)
 
 ## Credits
